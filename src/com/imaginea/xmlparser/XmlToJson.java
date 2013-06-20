@@ -22,8 +22,6 @@ import org.w3c.dom.NodeList;
 public class XmlToJson {
 	private final static Logger LOGGER = Logger.getLogger(XmlToJson.class
 			.getName());
-	static JSONArray array = new JSONArray();
-
 	public static void main(String[] args) throws Exception {
 		try {
 			JSONObject object = new JSONObject();
@@ -36,8 +34,8 @@ public class XmlToJson {
 			Document document = builder.parse(file);
 
 			Element root = document.getDocumentElement();
-			object = getData(root);
-			array.put(object);
+			object=getData(root);
+			//object.put(root.getNodeName(),getData(root));
 			System.out.println(object.toString(3));
 		} catch (Exception exception) {
 			LOGGER.log(Level.SEVERE, "Exception:", exception.getMessage());
@@ -45,40 +43,41 @@ public class XmlToJson {
 		}
 	}
 
-	public static JSONObject getData(Element node) throws JSONException {
+	public static JSONObject getData(Element element) throws JSONException {
 		JSONObject parent = new JSONObject();
-		JSONObject object = new JSONObject();
-		if (node.hasAttributes()) {
-			NamedNodeMap nodeMap = node.getAttributes();
+		JSONArray array=new JSONArray();
+		if (element.hasAttributes()) {
+			NamedNodeMap nodeMap = element.getAttributes();
 			for (int i = 0; i < nodeMap.getLength(); i++) {
-				Node node1 = nodeMap.item(i);
-				object.put(node1.getNodeName(), node1.getNodeValue());
+				Node node = nodeMap.item(i);
+				parent.put(node.getNodeName(), node.getNodeValue());
 			}
 		}
-		if (node.hasChildNodes()) {
-			List<Element> list = elements(node);
-			if (list.size() == 0) {
-				object.put("" + node.getTagName(), "" + node.getTextContent());
-				parent.put(node.getNodeName(), object);
+		if (element.hasChildNodes()) {
+			List<Element> childList = getElementList(element);
+			if (childList.size() == 0) {
+				parent.put("" + element.getTagName(), "" + element.getTextContent());
+			//	parent.put(node.getNodeName(), object);
 
 			} else {
-				for (int i = 0; i < list.size(); i++) {
-					Element node2 = list.get(i);
-					object.put("" + i, getData(node2));
+				for (int i = 0; i < childList.size(); i++) {
+					Element childElement = childList.get(i);
+					array.put(getData(childElement));
+					//parent.put(""+node2.getNodeName(), array);
 				}
-				parent.put(node.getNodeName(), object);
+				parent.put(element.getNodeName(), array);
 			}
 		}
 		return parent;
 	}
 
-	public static List<Element> elements(Node parent) {
-		List<Element> result = new LinkedList<Element>();
-		NodeList nl = parent.getChildNodes();
-		for (int i = 0; i < nl.getLength(); ++i) {
-			if (nl.item(i).getNodeType() == Node.ELEMENT_NODE)
-				result.add((Element) nl.item(i));
+	public static List<Element> getElementList(Node parent) {
+		List<Element> list = new LinkedList<Element>();
+		NodeList nodeList = parent.getChildNodes();
+		for (int i = 0; i < nodeList.getLength(); ++i) {
+			if (nodeList.item(i).getNodeType() == Node.ELEMENT_NODE)
+				list.add((Element) nodeList.item(i));
 		}
-		return result;
+		return list;
 	}
 }
