@@ -22,6 +22,7 @@ import org.w3c.dom.NodeList;
 public class XmlToJson {
 	private final static Logger LOGGER = Logger.getLogger(XmlToJson.class
 			.getName());
+
 	public static void main(String[] args) throws Exception {
 		try {
 			JSONObject object = new JSONObject();
@@ -34,9 +35,8 @@ public class XmlToJson {
 			Document document = builder.parse(file);
 
 			Element root = document.getDocumentElement();
-			object=getData(root);
-			//object.put(root.getNodeName(),getData(root));
-			System.out.println(object.toString(3));
+			object = getData(root);
+			System.out.println(object.toString(5));
 		} catch (Exception exception) {
 			LOGGER.log(Level.SEVERE, "Exception:", exception.getMessage());
 			throw new Exception("Exception", exception);
@@ -45,29 +45,29 @@ public class XmlToJson {
 
 	public static JSONObject getData(Element element) throws JSONException {
 		JSONObject parent = new JSONObject();
-		JSONArray array=new JSONArray();
+		JSONArray array = new JSONArray();
+		 JSONObject attributes=new JSONObject();
 		if (element.hasAttributes()) {
 			NamedNodeMap nodeMap = element.getAttributes();
 			for (int i = 0; i < nodeMap.getLength(); i++) {
 				Node node = nodeMap.item(i);
-				parent.put(node.getNodeName(), node.getNodeValue());
+				attributes.put(node.getNodeName(), node.getNodeValue());
 			}
+			array.put(attributes);
 		}
 		if (element.hasChildNodes()) {
 			List<Element> childList = getElementList(element);
 			if (childList.size() == 0) {
-				parent.put("" + element.getTagName(), "" + element.getTextContent());
-			//	parent.put(node.getNodeName(), object);
-
+				parent.put(element.getTagName(),element.getTextContent());
+				return parent;
 			} else {
 				for (int i = 0; i < childList.size(); i++) {
 					Element childElement = childList.get(i);
 					array.put(getData(childElement));
-					//parent.put(""+node2.getNodeName(), array);
 				}
-				parent.put(element.getNodeName(), array);
 			}
 		}
+		parent.put(element.getNodeName(), array);
 		return parent;
 	}
 
