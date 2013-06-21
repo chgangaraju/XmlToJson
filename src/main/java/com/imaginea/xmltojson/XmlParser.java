@@ -1,6 +1,7 @@
 package com.imaginea.xmltojson;
 
 import java.io.File;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,6 +18,15 @@ public class XmlParser {
 
 	public XmlParser() {
 		generator = new JsonGenerator(this);
+	}
+
+	public Element getDocumentRoot() throws Exception {
+		URL resource = XmlParser.class.getClassLoader().getResource(
+				"sample.xml");
+		File file = new File(resource.getPath());
+		Document document = this.createDocument(file);
+		Element root = document.getDocumentElement();
+		return root;
 	}
 
 	public Document createDocument(File file) throws Exception {
