@@ -36,13 +36,14 @@ public class XmlParser {
 		return document;
 	}
 
-	public List<Element> getElementList(Node parent) {
+	public List<Element> getElementListByTag(Node parent,String tagName) {
 		List<Element> list = new LinkedList<Element>();
 		NodeList nodeList = parent.getChildNodes();
 		for (int i = 0; i < nodeList.getLength(); ++i) {
-			if (nodeList.item(i).getNodeType() == Node.ELEMENT_NODE)
+			if (nodeList.item(i).getNodeType() == Node.ELEMENT_NODE&&nodeList.item(i).getNodeName().equals(tagName))
 				list.add((Element) nodeList.item(i));
 		}
 		return list;
 	}
+	
 }
