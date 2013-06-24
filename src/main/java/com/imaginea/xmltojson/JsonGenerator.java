@@ -13,7 +13,7 @@ public class JsonGenerator {
 	private final Logger LOGGER = Logger.getLogger(JsonGenerator.class
 			.getName());
 
-	public JSONObject createJson(Element element) throws Exception {
+	public JSONObject createJsonObject(Element element) throws Exception {
 		JSONObject parent = new JSONObject();
 		if (element.hasAttributes()) {
 			NamedNodeMap nodeMap = element.getAttributes();
@@ -42,7 +42,7 @@ public class JsonGenerator {
 					parent.accumulate(node.getNodeName(), node.getTextContent());
 				} else if (node.getNodeType() == Node.ELEMENT_NODE) {
 					parent.accumulate(((Element) node).getNodeName(),
-							createJson((Element) node));
+							createJsonObject((Element) node));
 				}
 			} catch (Exception e) {
 				LOGGER.log(Level.SEVERE, "Exception:", e.getMessage());

@@ -17,7 +17,7 @@ public class XmlToJsonConverter {
 		Element root = parser.getDocumentRoot();
 		JSONObject object = new JSONObject();
 		try {
-			object.accumulate(root.getNodeName(), generator.createJson(root));
+			object.accumulate(root.getNodeName(), generator.createJsonObject(root));
 		} catch (JSONException jsonException) {
 			LOGGER.log(Level.SEVERE, "JSON Exception:",jsonException.getMessage());
 			throw new JSONException("JSON Exception: "+ jsonException.getMessage());

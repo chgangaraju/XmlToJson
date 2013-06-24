@@ -28,7 +28,7 @@ public class JsonGeneratorTest extends TestCase {
 	@Test
 	public void testCreateJson() throws Exception {
 		Element element = parser.getDocumentRoot();
-		JSONObject object = generator.createJson(element);
+		JSONObject object = generator.createJsonObject(element);
 		assertNotNull(object);
 	}
 }
