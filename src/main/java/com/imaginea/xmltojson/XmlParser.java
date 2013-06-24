@@ -14,17 +14,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class XmlParser {
-	JsonGenerator generator;
-
-	public XmlParser() {
-		generator = new JsonGenerator(this);
-	}
 
 	public Element getDocumentRoot() throws Exception {
-		URL resource = XmlParser.class.getClassLoader().getResource(
-				"sample.xml");
+		URL resource = XmlParser.class.getClassLoader().getResource("sample.xml");
 		File file = new File(resource.getPath());
-		Document document = this.createDocument(file);
+		Document document = createDocument(file);
 		Element root = document.getDocumentElement();
 		return root;
 	}
@@ -36,14 +30,15 @@ public class XmlParser {
 		return document;
 	}
 
-	public List<Element> getElementListByTag(Node parent,String tagName) {
+	public List<Element> getElementListByTag(Node parentNode, String tagName) {
 		List<Element> list = new LinkedList<Element>();
-		NodeList nodeList = parent.getChildNodes();
+		NodeList nodeList = parentNode.getChildNodes();
 		for (int i = 0; i < nodeList.getLength(); ++i) {
-			if (nodeList.item(i).getNodeType() == Node.ELEMENT_NODE&&nodeList.item(i).getNodeName().equals(tagName))
+			if (nodeList.item(i).getNodeType() == Node.ELEMENT_NODE
+					&& nodeList.item(i).getNodeName().equals(tagName))
 				list.add((Element) nodeList.item(i));
 		}
 		return list;
 	}
-	
+
 }
