@@ -16,16 +16,7 @@ public class JsonGenerator {
 	public JSONObject createJsonObject(Element element) throws Exception {
 		JSONObject parent = new JSONObject();
 		if (element.hasAttributes()) {
-			NamedNodeMap nodeMap = element.getAttributes();
-			for (int i = 0; i < nodeMap.getLength(); i++) {
-				Node node = nodeMap.item(i);
-				try {
-					parent.accumulate("-"+node.getNodeName(), node.getNodeValue());
-				} catch (Exception e) {
-					LOGGER.log(Level.SEVERE, "Exception:", e.getMessage());
-					throw new Exception("Exception: " + e.getMessage());
-				}
-			}
+			processAttributes(element, parent);
 		}
 		if (element.hasChildNodes()) {
 			processChildNodes(element, parent);
@@ -33,7 +24,22 @@ public class JsonGenerator {
 		return parent;
 	}
 
-	public void processChildNodes(Element element, JSONObject parent) throws Exception {
+	public void processAttributes(Element element, JSONObject parent)
+			throws Exception {
+		NamedNodeMap nodeMap = element.getAttributes();
+		for (int i = 0; i < nodeMap.getLength(); i++) {
+			Node node = nodeMap.item(i);
+			try {
+				parent.accumulate("-" + node.getNodeName(), node.getNodeValue());
+			} catch (Exception e) {
+				LOGGER.log(Level.SEVERE, "Exception:", e.getMessage());
+				throw new Exception("Exception: " + e.getMessage());
+			}
+		}
+	}
+
+	public void processChildNodes(Element element, JSONObject parent)
+			throws Exception {
 		NodeList childList = element.getChildNodes();
 		for (int i = 0; i < childList.getLength(); i++) {
 			Node node = childList.item(i);
